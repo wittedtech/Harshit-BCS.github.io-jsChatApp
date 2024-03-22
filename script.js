@@ -1,3 +1,5 @@
+let name = '';
+
 // Initialize IndexedDB
 let db;
 const request = window.indexedDB.open('groupChatDB', 1);
@@ -41,7 +43,7 @@ function createMessageElement(message) {
   const messageElement = document.createElement('div');
   messageElement.className = 'message';
   messageElement.innerHTML = `
-    <div class="avatar" style="background-color: ${message.color};"></div>
+    <div class="avatar" style="background-color: ${message.color};">${message.name.charAt(0).toUpperCase()}</div>
     <div class="message-content">${message.text}</div>
   `;
   return messageElement;
@@ -56,7 +58,7 @@ function sendMessage() {
     const objectStore = transaction.objectStore('messages');
     const timestamp = new Date().getTime();
     const color = getRandomColor();
-    objectStore.add({ text: message, timestamp: timestamp, color: color });
+    objectStore.add({ name: name, text: message, timestamp: timestamp, color: color });
     displayMessages();
     messageInput.value = '';
   }
@@ -72,6 +74,19 @@ function getRandomColor() {
   return color;
 }
 
+// Event listener for setting name
+document.getElementById('set-name-btn').addEventListener('click', function() {
+  const nameInput = document.getElementById('name-input');
+  const setNameBtn = document.getElementById('set-name-btn');
+  name = nameInput.value.trim();
+  if (name !== '') {
+    nameInput.disabled = true;
+    setNameBtn.disabled = true;
+    document.getElementById('message-input').disabled = false;
+    document.getElementById('send-btn').disabled = false;
+  }
+});
+
 // Event listener for sending message
 document.getElementById('send-btn').addEventListener('click', sendMessage);
 
@@ -82,21 +97,3 @@ document.getElementById('message-input').addEventListener('keydown', function(ev
     sendMessage();
   }
 });
-
-// Event listener for Exit command
-document.getElementById('message-input').addEventListener('keyup', function(event) {
-  if (event.key === 'Enter' && event.shiftKey) {
-    event.preventDefault();
-  } else if (event.key === 'Enter' && this.value.toUpperCase() === 'EXIT') {
-    clearMessages();
-    this.value = '';
-  }
-});
-
-// Function to clear messages from IndexedDB
-function clearMessages() {
-  const transaction = db.transaction('messages', 'readwrite');
-  const objectStore = transaction.objectStore('messages');
-  objectStore.clear();
-  displayMessages();
-}

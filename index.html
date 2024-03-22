@@ -1,4 +1,3 @@
-<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -9,14 +8,10 @@
 <body>
   <div class="chat-container">
     <div id="chat-window"></div>
-    <div class="user-details">
-      <input type="text" id="username-input" placeholder="Enter your name">
-      <button id="set-username-btn">Set Name</button>
-    </div>
-    <div class="message-box">
-      <input type="text" id="message-input" placeholder="Type your message...">
-      <button id="send-btn">Send</button>
-    </div>
+    <input type="text" id="name-input" placeholder="Enter your name...">
+    <button id="set-name-btn">Set Name</button>
+    <input type="text" id="message-input" placeholder="Type your message..." disabled>
+    <button id="send-btn" disabled>Send</button>
   </div>
 
   <script src="script.js"></script>
